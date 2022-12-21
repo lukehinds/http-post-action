@@ -1,11 +1,13 @@
 name: 'HTTP Post action'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+description: 'Post to an HTTP endpoint'
+author: 'Luke Hinds'
 inputs:
-  milliseconds: # change this
+  url: # change this
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+    description: 'URL to post to'
+  artifact_name:
+    required: true
+    description: 'Name of the artifact to post'
 runs:
   using: 'node16'
   main: 'dist/index.js'
