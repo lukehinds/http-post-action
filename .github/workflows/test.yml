@@ -21,4 +21,5 @@ jobs:
       - uses: actions/checkout@v2
       - uses: ./
         with:
-          milliseconds: 1000
+          url: http://example.com/upload
+          artifact_name: ${{ steps.download.outputs.artifact }}
