@@ -14,15 +14,13 @@ async function run(): Promise<void> {
     // const artifact = JSON.parse(fs.readFileSync(artifact_name, 'utf8'))
     // load the artifact as form data
     const artifact = fs.readFileSync(artifact_name, 'utf8')
-    // post the artifact to the server
     const options = {
       url,
-      method: 'POST',
       headers: {
         'Content-Type': 'multipart/form-data'
       },
       formData: {
-        artifact
+        artifact: fs.createReadStream(artifact)
       }
     }
     request.post(options, (error: any, res: any, body: any) => {
@@ -32,15 +30,6 @@ async function run(): Promise<void> {
       core.debug(`statusCode: ${res.statusCode}`)
       core.debug(body)
     })
-
-
-    // request.post(url, {json: artifact}, (error: any, res: any, body: any) => {
-    //   if (error) {
-    //     core.setFailed(error)
-    //   }
-    //   core.debug(`statusCode: ${res.statusCode}`)
-    //   core.debug(body)
-    // })
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
   }
