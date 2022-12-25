@@ -10,6 +10,7 @@ async function run(): Promise<void> {
     core.debug(`Posting to ${url} ...`)
     // access the artifact named "slsa-provenance" and upload it to the server
     const artifact_name: string = core.getInput('artifact_name')
+    console.log("artifact_name :" + artifact_name);
     // json parse the artifact
     const artifact = JSON.parse(fs.readFileSync(artifact_name, 'utf8'))
     // post the artifact to the server
