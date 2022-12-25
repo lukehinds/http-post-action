@@ -1,37 +1,30 @@
 import * as core from '@actions/core'
 import * as fs from 'fs'
-// import http
-// import request
 import * as request from 'request'
+import FormData from 'form-data'
 
 async function run(): Promise<void> {
   try {
     const url: string = core.getInput('url')
     core.debug(`Posting to ${url} ...`)
-    // access the artifact named "slsa-provenance" and upload it to the server
-    const artifact_name: string = core.getInput('artifact_name')
-    // json parse the artifact
-    // const artifact = JSON.parse(fs.readFileSync(artifact_name, 'utf8'))
-    // load the artifact as form data
-    const artifact = fs.readFileSync(artifact_name, 'utf8')
-    const options = {
+
+    const artifactName: string = core.getInput('artifact_name')
+    const form = new FormData()
+    form.append('my_field', 'my value')
+    form.append('my_buffer', Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]))
+    form.append('my_file', fs.createReadStream(artifactName))
+
+    const response = request.post({
       url,
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      },
-      formData: {
-        artifact: fs.createReadStream(artifact)
-      }
-    }
-    request.post(options, (error: any, res: any, body: any) => {
-      if (error) {
-        core.setFailed(error)
-      }
-      core.debug(`statusCode: ${res.statusCode}`)
-      core.debug(body)
+      body: form,
+      headers: form.getHeaders()
     })
+
+    core.debug(`Response: ${response.body}`)
   } catch (error) {
-    if (error instanceof Error) core.setFailed(error.message)
+    if (error instanceof Error) {
+      core.setFailed(error.message)
+    }
   }
 }
 
