@@ -10,17 +10,37 @@ async function run(): Promise<void> {
     core.debug(`Posting to ${url} ...`)
     // access the artifact named "slsa-provenance" and upload it to the server
     const artifact_name: string = core.getInput('artifact_name')
-    console.log("artifact_name :" + artifact_name);
     // json parse the artifact
-    const artifact = JSON.parse(fs.readFileSync(artifact_name, 'utf8'))
+    // const artifact = JSON.parse(fs.readFileSync(artifact_name, 'utf8'))
+    // load the artifact as form data
+    const artifact = fs.readFileSync(artifact_name, 'utf8')
     // post the artifact to the server
-    request.post(url, {json: artifact}, (error: any, res: any, body: any) => {
+    const options = {
+      url,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
+      formData: {
+        artifact
+      }
+    }
+    request.post(options, (error: any, res: any, body: any) => {
       if (error) {
         core.setFailed(error)
       }
       core.debug(`statusCode: ${res.statusCode}`)
       core.debug(body)
     })
+
+
+    // request.post(url, {json: artifact}, (error: any, res: any, body: any) => {
+    //   if (error) {
+    //     core.setFailed(error)
+    //   }
+    //   core.debug(`statusCode: ${res.statusCode}`)
+    //   core.debug(body)
+    // })
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
   }
