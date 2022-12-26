@@ -21,7 +21,10 @@ async function run(): Promise<void> {
       url,
       body: form,
       // use header with 'Content-Type', 'multipart/form-data'
-      headers: form.getHeaders()
+      headers: {
+        ...form.getHeaders(),
+        'Content-Type': `multipart/form-data; boundary=${form.getBoundary()}`
+      }
     })
 
     core.debug(`Response: ${response.body}`)
