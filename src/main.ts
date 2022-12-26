@@ -10,13 +10,17 @@ async function run(): Promise<void> {
 
     const artifactName: string = core.getInput('artifact_name')
     const form = new FormData()
-    form.append('my_field', 'my value')
-    form.append('my_buffer', Buffer.from([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]))
-    form.append('my_file', fs.createReadStream(artifactName))
+
+    // form append with multipart/form-data header
+    form.append('file', fs.createReadStream(artifactName), {
+      filename: artifactName,
+      contentType: 'multipart/form-data'
+    })
 
     const response = request.post({
       url,
       body: form,
+      // use header with 'Content-Type', 'multipart/form-data'
       headers: form.getHeaders()
     })
 
