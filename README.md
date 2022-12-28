@@ -38,5 +38,5 @@ You can now validate the action by referencing `./` in a workflow in your repo (
 uses: ./
 with:
   url: https://example.com/upload
-  file: ./test.txt
+  artifact_name: ./test.txt
 ```
